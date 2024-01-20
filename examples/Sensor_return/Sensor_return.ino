@@ -1,4 +1,4 @@
-#include <Sensors_INSARIANNE.h>
+#include <INSARIANNE.h>
 
 BMP085 bmp;
 MPU6050 mpu;

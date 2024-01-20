@@ -1,8 +1,8 @@
 /*!
- * @file Sensors.h
+ * @file INSARIANNE.h
  *
  * This is a library for the BMP085 Barometric Pressure + Temp
- * sensor and the MUP6050
+ * sensor and the MUP6050 accelerometer, gyroscopique and temperature sensor
  *
  * These displays use I2C to communicate, 2 pins are required to
  * interface
@@ -19,6 +19,8 @@
 
 class sensor {
   protected:
+    sensor(TwoWire *theWire = &Wire);
+
     bool write(uint8_t *data, size_t len, bool stop = true, \
                uint8_t *pre_data = nullptr, size_t pre_len = 0);
     uint8_t read8(uint8_t *reg);
@@ -37,7 +39,7 @@ class BMP085 : private sensor
   public:
     BMP085();
 
-    bool begin(TwoWire *theWire = &Wire);
+    bool begin();
 
     void read_sensor(void);
     void Set_SLP(float altitude_base);
@@ -63,7 +65,7 @@ class MPU6050 : private sensor
   public:
     MPU6050();
 
-    bool begin(TwoWire *theWire = &Wire);
+    bool begin();
     void read_sensor(void);
 
     float temperature, gyroX, gyroY, gyroZ, accX, accY, accZ;

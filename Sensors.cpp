@@ -1,5 +1,5 @@
 /*!
- * @file Sensors.h
+ * @file Sensors.cpp
  *
  * @mainpage INSARIANNE Sensors
  * 
@@ -20,7 +20,10 @@
 #include "INSARIANNE.h"
 #include "Register.h"
 
-//sensor::sensor() {}
+
+sensor::sensor(TwoWire *theWire) {
+    _wire = theWire;
+}
 
 bool sensor::write(uint8_t *data, size_t len, bool stop, 
                    uint8_t *reg, size_t reg_len) {
@@ -89,12 +92,11 @@ uint8_t sensor::read_bits(uint8_t *reg, uint8_t bits, uint8_t shift) {
 
 
 
-BMP085::BMP085() {
+BMP085::BMP085() : sensor() {
     _addr = BMP_ADDR;
 }
 
-bool BMP085::begin(TwoWire *theWire) {
-    _wire = theWire;
+bool BMP085::begin() {
     oversampling = BMP085_ULTRAHIGHRES;
     
     if (read8(0xD0) != 0x55)
@@ -189,13 +191,11 @@ void BMP085::Altitude(void) {
     altitude = 44330 * (1.0 - pow(pressure / sealevelpressure, 0.1903));
 }
 
-MPU6050::MPU6050() {
+MPU6050::MPU6050() : sensor() {
     _addr = MPU_ADDR;
 }
 
-bool MPU6050::begin(TwoWire *theWire) {
-    _wire = theWire;
-
+bool MPU6050::begin() {
     write(MPU6050_FSYNC_OUT_DISABLED, 1, true, MPU6050_SMPLRT_DIV, 1);
     write_bits(MPU6050_BAND_260_HZ, MPU6050_ACCEL_CONFIG, 2, 3);
     write_bits(MPU6050_RANGE_500_DEG, MPU6050_GYRO_CONFIG, 2, 3);
