@@ -1,0 +1,89 @@
+/*!
+ * @file _I2C.cpp
+ *
+ * @mainpage I2C Sensors
+ * 
+ * @section Intoduction
+ * 
+ * This is a library for mother class I2C sensor
+ *
+ * These displays use I2C to communicate, 2 pins are required to
+ * interface
+ * 
+ * @section Author
+ * 
+ * Written by Corentin Roche
+ * 
+ */
+
+#include "INSARIANNE.h"
+
+
+I2C::I2C(TwoWire *theWire) {
+    _wire = theWire;
+}
+
+bool I2C::write(uint8_t *data, size_t len, bool stop, 
+                   uint8_t *reg, size_t reg_len) {
+    _wire->beginTransmission(_addr);
+    if ((reg_len != 0) && (reg != nullptr)) {
+        if (_wire->write(reg, reg_len) != reg_len) {
+            return false;
+        }
+    }
+    if (_wire->write(data, len) != len) {
+        return false;
+    }
+    if (_wire->endTransmission(stop) == 0) {
+        return true;
+    }
+    return false;    
+}
+
+uint8_t I2C::read8(uint8_t *reg) {
+    if (!write(reg, 1, true)) 
+        return false;
+    
+    return _wire->read();
+}
+
+uint16_t I2C::read16(uint8_t *reg) {
+    uint8_t buffer[2];
+    
+    if (!write(reg, 1, true)) 
+        return false;
+    
+    buffer[0] = _wire->read();
+    buffer[1] = _wire->read();
+
+    return (buffer[0] << 8 | buffer[1]);
+}
+
+bool I2C::read_n(uint8_t *reg, uint8_t data[], int n) {
+    if (!write(reg, 1, true)) 
+        return false;
+
+    for (int i=0; i<n; i++) 
+        data[i] = _wire->read();
+    
+    return true;
+}
+
+bool I2C::write_bits(uint8_t *data, uint8_t *reg, uint8_t bits, uint8_t shift) {
+    uint8_t val = read8(reg);
+
+    uint8_t mask = (1 << bits) - 1;
+    *data &= mask;
+    mask <<= shift;
+    val &= ~mask;
+    val |= *data << shift;
+
+    write(val, 1, true, reg, 1);
+}
+
+uint8_t I2C::read_bits(uint8_t *reg, uint8_t bits, uint8_t shift) {
+    uint8_t val = read8(reg);
+
+    val >>= shift;
+    return val & ((1 << bits) - 1);
+}

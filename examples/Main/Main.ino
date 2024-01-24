@@ -12,8 +12,6 @@ INSARIANNE 1
 
 #include <Servo.h>
 #include <INSARIANNE.h>
-#include <Wire.h>
-#include <SPI.h>
 #include <SD.h>
 
 #define _BV(n) (1<<n)

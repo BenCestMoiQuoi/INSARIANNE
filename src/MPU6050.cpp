@@ -1,28 +1,23 @@
+/*!
+ * @file MPU6050.cpp
+ *
+ * @mainpage MPU6050 Sensors
+ * 
+ * @section Intoduction
+ * 
+ * This is a library for the MPU6050 accelerometer, gyroscope 
+ * and temperature sensor
+ *
+ * These displays use I2C to communicate, 2 pins are required to
+ * interface
+ * 
+ * @section Author
+ * 
+ * Written by Corentin Roche
+ * 
+ */
 
-#define BMP_ADDR 0x77
-
-#define BMP085_ULTRALOWPOWER 0 //!< Ultra low power mode
-#define BMP085_STANDARD 1      //!< Standard mode
-#define BMP085_HIGHRES 2       //!< High-res mode
-#define BMP085_ULTRAHIGHRES 3  //!< Ultra high-res mode
-#define BMP085_CAL_AC1 0xAA    //!< R   Calibration data (16 bits)
-#define BMP085_CAL_AC2 0xAC    //!< R   Calibration data (16 bits)
-#define BMP085_CAL_AC3 0xAE    //!< R   Calibration data (16 bits)
-#define BMP085_CAL_AC4 0xB0    //!< R   Calibration data (16 bits)
-#define BMP085_CAL_AC5 0xB2    //!< R   Calibration data (16 bits)
-#define BMP085_CAL_AC6 0xB4    //!< R   Calibration data (16 bits)
-#define BMP085_CAL_B1 0xB6     //!< R   Calibration data (16 bits)
-#define BMP085_CAL_B2 0xB8     //!< R   Calibration data (16 bits)
-#define BMP085_CAL_MB 0xBA     //!< R   Calibration data (16 bits)
-#define BMP085_CAL_MC 0xBC     //!< R   Calibration data (16 bits)
-#define BMP085_CAL_MD 0xBE     //!< R   Calibration data (16 bits)
-
-#define BMP085_CONTROL 0xF4         //!< Control register
-#define BMP085_TEMPDATA 0xF6        //!< Temperature data register
-#define BMP085_PRESSUREDATA 0xF6    //!< Pressure data register
-#define BMP085_READTEMPCMD 0x2E     //!< Read temperature control register value
-#define BMP085_READPRESSURECMD 0x34 //!< Read pressure control register value
-
+#include "INSARIANNE.h"
 
 
 #define MPU_ADDR 0x68
@@ -96,3 +91,46 @@
 #define MPU6050_CYCLE_5_HZ 1    ///< 5 Hz
 #define MPU6050_CYCLE_20_HZ 2  ///< 20 Hz
 #define MPU6050_CYCLE_40_HZ 3  ///< 40 Hz
+
+
+MPU6050::MPU6050() : I2C() {
+    _addr = MPU_ADDR;
+}
+
+bool MPU6050::begin() {
+    write(MPU6050_FSYNC_OUT_DISABLED, 1, true, MPU6050_SMPLRT_DIV, 1);
+    write_bits(MPU6050_BAND_260_HZ, MPU6050_ACCEL_CONFIG, 2, 3);
+    write_bits(MPU6050_RANGE_500_DEG, MPU6050_GYRO_CONFIG, 2, 3);
+    write_bits(MPU6050_RANGE_2_G, MPU6050_ACCEL_CONFIG, 2, 3);
+
+    gyro_scale = 65.5;
+    accel_scale = 16384;
+    return true;
+}
+
+void MPU6050::read_sensor(void) {
+    uint8_t buffer[14];
+
+    read_n((uint8_t)MPU6050_ACCEL_OUT, buffer, 14);
+
+    rawAccX = buffer[0] << 8 | buffer[1];
+    rawAccY = buffer[2] << 8 | buffer[3];
+    rawAccZ = buffer[4] << 8 | buffer[5];
+    
+    rawTemp = buffer[6] << 8 | buffer[7];
+
+    rawGyroX = buffer[8] << 8 | buffer[9];
+    rawGyroY = buffer[10] << 8 | buffer[11];
+    rawGyroY = buffer[12] << 8 | buffer[13];
+
+
+    temperature = (rawTemp / 340.0) + 36.53;
+
+    accX = ((float)rawAccX) / accel_scale;
+    accY = ((float)rawAccY) / accel_scale;
+    accZ = ((float)rawAccZ) / accel_scale;
+
+    gyroX = ((float)rawGyroX) / gyro_scale;
+    gyroY = ((float)rawGyroY) / gyro_scale;
+    gyroZ = ((float)rawGyroZ) / gyro_scale;
+}

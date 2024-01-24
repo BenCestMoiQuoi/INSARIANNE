@@ -14,12 +14,12 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-#include "Register.h"
+#include <SPI.h>
 
 
-class sensor {
+class I2C {
   protected:
-    sensor(TwoWire *theWire = &Wire);
+    I2C(TwoWire *theWire = &Wire);
 
     bool write(uint8_t *data, size_t len, bool stop = true, \
                uint8_t *pre_data = nullptr, size_t pre_len = 0);
@@ -34,7 +34,7 @@ class sensor {
 };
 
 
-class BMP085 : private sensor
+class BMP085 : private I2C
 {
   public:
     BMP085();
@@ -60,7 +60,7 @@ class BMP085 : private sensor
 };
 
 
-class MPU6050 : private sensor
+class MPU6050 : private I2C
 {
   public:
     MPU6050();
@@ -76,5 +76,19 @@ class MPU6050 : private sensor
     float accel_scale, gyro_scale;
 };
 
+class SPI {
+  protected:
+    SPI();
+    void SendSPI(uint8_t buff);
+    uint8_t RecSPI(void);
+
+    void begin(uint8_t cs_pin);
+
+
+
+  private:
+    uint8_t _CS_pin;
+
+};
 
 #endif 
