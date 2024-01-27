@@ -18,6 +18,8 @@
 
 #include "utility/twi.h"
 
+#define VERSION_LIB "1.1.2"
+
 
 class I2C {
   protected:
