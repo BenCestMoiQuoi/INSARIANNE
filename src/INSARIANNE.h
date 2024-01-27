@@ -16,13 +16,16 @@
 #include <Wire.h>
 #include <SPI.h>
 
+#include "utility/twi.h"
+
 
 class I2C {
   protected:
     I2C(TwoWire *theWire = &Wire);
+    virtual void begin(uint8_t address);
 
     bool write(uint8_t *data, size_t len, bool stop = true, \
-               uint8_t *pre_data = nullptr, size_t pre_len = 0);
+               uint8_t *reg_data = nullptr, size_t reg_len = 0);
     uint8_t read8(uint8_t *reg);
     uint16_t read16(uint8_t *reg);
     bool read_n(uint8_t *reg, uint8_t data[], int n);
@@ -67,6 +70,9 @@ class MPU6050 : private I2C
 
     bool begin();
     void read_sensor(void);
+    
+    void Set_gyro_scale(float new_scale);
+    void Set_accel_scale(float new_scale);
 
     float temperature, gyroX, gyroY, gyroZ, accX, accY, accZ;
 

@@ -98,12 +98,12 @@ MPU6050::MPU6050() : I2C() {
 }
 
 bool MPU6050::begin() {
-    write(MPU6050_FSYNC_OUT_DISABLED, 1, true, MPU6050_SMPLRT_DIV, 1);
-    write_bits(MPU6050_BAND_260_HZ, MPU6050_ACCEL_CONFIG, 2, 3);
-    write_bits(MPU6050_RANGE_500_DEG, MPU6050_GYRO_CONFIG, 2, 3);
-    write_bits(MPU6050_RANGE_2_G, MPU6050_ACCEL_CONFIG, 2, 3);
+    // write(MPU6050_FSYNC_OUT_DISABLED, 1, true, MPU6050_SMPLRT_DIV, 1);
+    // write_bits(MPU6050_BAND_260_HZ, MPU6050_ACCEL_CONFIG, 2, 3);
+    // write_bits(MPU6050_RANGE_500_DEG, MPU6050_GYRO_CONFIG, 2, 3);
+    // write_bits(MPU6050_RANGE_2_G, MPU6050_ACCEL_CONFIG, 2, 3);
 
-    gyro_scale = 65.5;
+    gyro_scale = 131;
     accel_scale = 16384;
     return true;
 }
@@ -111,7 +111,7 @@ bool MPU6050::begin() {
 void MPU6050::read_sensor(void) {
     uint8_t buffer[14];
 
-    read_n((uint8_t)MPU6050_ACCEL_OUT, buffer, 14);
+    read_n((uint8_t)MPU6050_ACCEL_OUT, buffer, (uint8_t) 14);
 
     rawAccX = buffer[0] << 8 | buffer[1];
     rawAccY = buffer[2] << 8 | buffer[3];
@@ -133,4 +133,12 @@ void MPU6050::read_sensor(void) {
     gyroX = ((float)rawGyroX) / gyro_scale;
     gyroY = ((float)rawGyroY) / gyro_scale;
     gyroZ = ((float)rawGyroZ) / gyro_scale;
+}
+
+void MPU6050::Set_gyro_scale(float new_scale){
+    gyro_scale = new_scale;
+}
+
+void MPU6050::Set_accel_scale(float new_scale){
+    accel_scale = new_scale;
 }

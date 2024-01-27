@@ -23,34 +23,35 @@ I2C::I2C(TwoWire *theWire) {
     _wire = theWire;
 }
 
+void I2C::begin(uint8_t address) {
+    _addr = address;
+}
+
 bool I2C::write(uint8_t *data, size_t len, bool stop, 
                    uint8_t *reg, size_t reg_len) {
     _wire->beginTransmission(_addr);
     if ((reg_len != 0) && (reg != nullptr)) {
-        if (_wire->write(reg, reg_len) != reg_len) {
-            return false;
-        }
+        if (_wire->write(reg, reg_len) != reg_len) return false;
     }
-    if (_wire->write(data, len) != len) {
-        return false;
+    if((len != 0) && (data != nullptr)) {
+        if (_wire->write(data, len) != len) return false;
     }
-    if (_wire->endTransmission(stop) == 0) {
-        return true;
-    }
+    if (_wire->endTransmission(stop) == 0) return true;
     return false;    
 }
 
 uint8_t I2C::read8(uint8_t *reg) {
-    if (!write(reg, 1, true)) 
+    uint8_t buffer;
+    if (read_n(reg, buffer, 2)) 
         return false;
     
-    return _wire->read();
+    return buffer;
 }
 
 uint16_t I2C::read16(uint8_t *reg) {
     uint8_t buffer[2];
     
-    if (!write(reg, 1, true)) 
+    if (read_n(reg, buffer, 2)) 
         return false;
     
     buffer[0] = _wire->read();
@@ -60,7 +61,7 @@ uint16_t I2C::read16(uint8_t *reg) {
 }
 
 bool I2C::read_n(uint8_t *reg, uint8_t data[], int n) {
-    if (!write(reg, 1, true)) 
+    if (_wire->requestFrom(_addr, (uint8_t) n, &reg, 1, true) != n) 
         return false;
 
     for (int i=0; i<n; i++) 
