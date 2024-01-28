@@ -61,7 +61,7 @@ uint16_t I2C::read16(uint8_t *reg) {
 }
 
 bool I2C::read_n(uint8_t *reg, uint8_t data[], int n) {
-    if (_wire->requestFrom(_addr, (uint8_t) n, &reg, 1, true) != n) 
+    if (_wire->requestFrom(_addr, (uint8_t) n, reg, 1, true) != n) 
         return false;
 
     for (int i=0; i<n; i++) 

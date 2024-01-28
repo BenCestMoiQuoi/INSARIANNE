@@ -111,7 +111,8 @@ bool MPU6050::begin() {
 void MPU6050::read_sensor(void) {
     uint8_t buffer[14];
 
-    read_n((uint8_t)MPU6050_ACCEL_OUT, buffer, (uint8_t) 14);
+    if (!read_n((uint8_t)MPU6050_ACCEL_OUT, buffer, 14)) 
+        return false;
 
     rawAccX = buffer[0] << 8 | buffer[1];
     rawAccY = buffer[2] << 8 | buffer[3];
@@ -133,6 +134,8 @@ void MPU6050::read_sensor(void) {
     gyroX = ((float)rawGyroX) / gyro_scale;
     gyroY = ((float)rawGyroY) / gyro_scale;
     gyroZ = ((float)rawGyroZ) / gyro_scale;
+
+    return true
 }
 
 void MPU6050::Set_gyro_scale(float new_scale){
