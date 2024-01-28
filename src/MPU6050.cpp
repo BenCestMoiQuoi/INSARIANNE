@@ -135,7 +135,7 @@ void MPU6050::read_sensor(void) {
     gyroY = ((float)rawGyroY) / gyro_scale;
     gyroZ = ((float)rawGyroZ) / gyro_scale;
 
-    return true
+    return true;
 }
 
 void MPU6050::Set_gyro_scale(float new_scale){
