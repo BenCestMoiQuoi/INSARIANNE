@@ -18,7 +18,7 @@
 
 #include "utility/twi.h"
 
-#define VERSION_LIB "1.1.2"
+#define VERSION_LIB "1.1.3"
 
 
 class I2C {
