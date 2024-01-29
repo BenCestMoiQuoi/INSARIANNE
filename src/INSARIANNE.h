@@ -16,9 +16,8 @@
 #include <Wire.h>
 #include <SPI.h>
 
-#include "utility/twi.h"
 
-#define VERSION_LIB "1.1.4"
+#define VERSION_LIB "1.1.6"
 
 
 class I2C {
@@ -28,11 +27,11 @@ class I2C {
 
     bool write(uint8_t *data, size_t len, bool stop = true, \
                uint8_t *reg_data = nullptr, size_t reg_len = 0);
-    uint8_t read8(uint8_t *reg);
-    uint16_t read16(uint8_t *reg);
-    bool read_n(uint8_t *reg, uint8_t data[], int n);
-    bool write_bits(uint8_t *data, uint8_t *reg, uint8_t bits, uint8_t shift);
-    uint8_t read_bits(uint8_t *reg, uint8_t bits, uint8_t shift);
+    uint8_t read8(uint8_t reg);
+    uint16_t read16(uint8_t reg);
+    bool read_n(uint8_t reg, uint8_t data[], int n);
+    bool write_bits(uint8_t data, uint8_t reg, uint8_t bits, uint8_t shift);
+    uint8_t read_bits(uint8_t reg, uint8_t bits, uint8_t shift);
   
     uint8_t _addr;
     TwoWire *_wire;
@@ -44,7 +43,7 @@ class BMP085 : private I2C
   public:
     BMP085();
 
-    bool begin();
+    bool begin(void);
 
     void read_sensor(void);
     void Set_SLP(float altitude_base);
@@ -71,10 +70,21 @@ class MPU6050 : private I2C
     MPU6050();
 
     bool begin();
+    bool begin(uint8_t para_gyr, uint8_t para_acc);
     void read_sensor(void);
+
+    void read_acce(void);
+    void read_gyro(void);
+    void read_temp(void);
     
     void Set_gyro_scale(float new_scale);
     void Set_accel_scale(float new_scale);
+    bool Set_param_register(uint8_t val, uint8_t reg);
+    bool Set_param_register_bits(uint8_t val, uint8_t reg, uint8_t bits, uint8_t shift);
+    float Get_gyro_scale(void);
+    float Get_accel_scale(void);
+    uint8_t Get_param_register(uint8_t reg);
+    uint8_t Get_param_register(uint8_t reg, uint8_t bits, uint8_t shift);
 
     float temperature, gyroX, gyroY, gyroZ, accX, accY, accZ;
 

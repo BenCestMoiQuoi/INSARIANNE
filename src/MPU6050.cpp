@@ -30,88 +30,84 @@
 #define MPU6050_CONFIG 0x1A      ///< General configuration register
 #define MPU6050_GYRO_CONFIG 0x1B ///< Gyro specfic configuration register
 #define MPU6050_ACCEL_CONFIG 0x1C ///< Accelerometer specific configration register
-#define MPU6050_INT_PIN_CONFIG 0x37 ///< Interrupt pin configuration register
-#define MPU6050_INT_ENABLE 0x38     ///< Interrupt enable configuration register
-#define MPU6050_INT_STATUS 0x3A     ///< Interrupt status register
-#define MPU6050_WHO_AM_I 0x75       ///< Divice ID register
-#define MPU6050_SIGNAL_PATH_RESET 0x68 ///< Signal path reset register
-#define MPU6050_USER_CTRL 0x6A         ///< FIFO and I2C Master control register
-#define MPU6050_PWR_MGMT_1 0x6B ///< Primary power/sleep control register
-#define MPU6050_PWR_MGMT_2 0x6C ///< Secondary power/sleep control register
-#define MPU6050_TEMP_H 0x41     ///< Temperature data high byte register
-#define MPU6050_TEMP_L 0x42     ///< Temperature data low byte register
-#define MPU6050_ACCEL_OUT 0x3B  ///< base address for sensor data reads
-#define MPU6050_MOT_THR 0x1F    ///< Motion detection threshold bits [7:0]
-#define MPU6050_MOT_DUR 0x20 ///< Duration counter threshold for motion int. 1 kHz rate, LSB = 1 ms
+#define MPU6050_GYRO_OUT 0x43   ///< Gyroscope data register
+#define MPU6050_TEMP_OUT 0x41     ///< Temperature data register
+#define MPU6050_ACCEL_OUT 0x3B  ///< Accelerometer data register
 
-#define MPU6050_FSYNC_OUT_DISABLED 0
-#define MPU6050_FSYNC_OUT_TEMP 1
-#define MPU6050_FSYNC_OUT_GYROX 2
-#define MPU6050_FSYNC_OUT_GYROY 3
-#define MPU6050_FSYNC_OUT_GYROZ 4
-#define MPU6050_FSYNC_OUT_ACCELX 5
-#define MPU6050_FSYNC_OUT_ACCELY 6
-#define MPU6050_FSYNC_OUT_ACCEL_Z 7
-
-#define MPU6050_INTR_8MHz 0
-#define MPU6050_PLL_GYROX 1
-#define MPU6050_PLL_GYROY 2
-#define MPU6050_PLL_GYROZ 3
-#define MPU6050_PLL_EXT_32K 4
-#define MPU6050_PLL_EXT_19MHz 5
-#define MPU6050_STOP 7
+#define MPU6050_FSYNC_OUT_DISABLED 0b000
+#define MPU6050_FSYNC_OUT_TEMP 0b001
+#define MPU6050_FSYNC_OUT_GYROX 0b010
+#define MPU6050_FSYNC_OUT_GYROY 0b011
+#define MPU6050_FSYNC_OUT_GYROZ 0b100
+#define MPU6050_FSYNC_OUT_ACCELX 0b101
+#define MPU6050_FSYNC_OUT_ACCELY 0b110
+#define MPU6050_FSYNC_OUT_ACCEL_Z 0b111
 
 #define MPU6050_RANGE_2_G 0b00  ///< +/- 2g (default value)
 #define MPU6050_RANGE_4_G = 0b01  ///< +/- 4g
 #define MPU6050_RANGE_8_G = 0b10  ///< +/- 8g
 #define MPU6050_RANGE_16_G = 0b11 ///< +/- 16g
 
-#define MPU6050_RANGE_250_DEG 0  ///< +/- 250 deg/s (default value)
-#define MPU6050_RANGE_500_DEG 1  ///< +/- 500 deg/s
-#define MPU6050_RANGE_1000_DEG 2 ///< +/- 1000 deg/s
-#define MPU6050_RANGE_2000_DEG 3 ///< +/- 2000 deg/s
+#define MPU6050_RANGE_250_DEG 0b00  ///< +/- 250 deg/s (default value)
+#define MPU6050_RANGE_500_DEG 0b01  ///< +/- 500 deg/s
+#define MPU6050_RANGE_1000_DEG 0b10 ///< +/- 1000 deg/s
+#define MPU6050_RANGE_2000_DEG 0b11 ///< +/- 2000 deg/s
 
-#define MPU6050_BAND_260_HZ 0 ///< Docs imply this disables the filter
-#define MPU6050_BAND_184_HZ 1 ///< 184 Hz
-#define MPU6050_BAND_94_HZ 2  ///< 94 Hz
-#define MPU6050_BAND_44_HZ 3  ///< 44 Hz
-#define MPU6050_BAND_21_HZ 4  ///< 21 Hz
-#define MPU6050_BAND_10_HZ 5  ///< 10 Hz
-#define MPU6050_BAND_5_HZ 6   ///< 5 Hz
-
-#define MPU6050_HIGHPASS_DISABLE 0
-#define MPU6050_HIGHPASS_5_HZ 1
-#define MPU6050_HIGHPASS_2_5_HZ 2
-#define MPU6050_HIGHPASS_1_25_HZ 3
-#define MPU6050_HIGHPASS_0_63_HZ 4
-#define MPU6050_HIGHPASS_UNUSED 5
-#define MPU6050_HIGHPASS_HOLD 6
-
-#define MPU6050_CYCLE_1_25_HZ 0 ///< 1.25 Hz
-#define MPU6050_CYCLE_5_HZ 1    ///< 5 Hz
-#define MPU6050_CYCLE_20_HZ 2  ///< 20 Hz
-#define MPU6050_CYCLE_40_HZ 3  ///< 40 Hz
+#define MPU6050_BAND_260_HZ 0b000 ///< Docs imply this disables the filter
+#define MPU6050_BAND_184_HZ 0b001 ///< 184 Hz
+#define MPU6050_BAND_94_HZ 0b010  ///< 94 Hz
+#define MPU6050_BAND_44_HZ 0b011  ///< 44 Hz
+#define MPU6050_BAND_21_HZ 0b100  ///< 21 Hz
+#define MPU6050_BAND_10_HZ 0b101  ///< 10 Hz
+#define MPU6050_BAND_5_HZ 0b110   ///< 5 H
 
 
 MPU6050::MPU6050() : I2C() {
     _addr = MPU_ADDR;
 }
 
-bool MPU6050::begin() {
-    // write(MPU6050_FSYNC_OUT_DISABLED, 1, true, MPU6050_SMPLRT_DIV, 1);
-    // write_bits(MPU6050_BAND_260_HZ, MPU6050_ACCEL_CONFIG, 2, 3);
-    // write_bits(MPU6050_RANGE_500_DEG, MPU6050_GYRO_CONFIG, 2, 3);
-    // write_bits(MPU6050_RANGE_2_G, MPU6050_ACCEL_CONFIG, 2, 3);
+bool MPU6050::begin(uint8_t para_gyr, uint8_t para_acc) {
+    if(!write(MPU6050_FSYNC_OUT_DISABLED, 1, true, MPU6050_SMPLRT_DIV, 1) ||
+       !write_bits(para_gyr, MPU6050_GYRO_CONFIG, 2, 3) ||
+       !write_bits(para_acc, MPU6050_ACCEL_CONFIG, 2, 3))
+            return false;
 
-    gyro_scale = 131;
-    accel_scale = 16384;
+    switch(read_bits(0x1B, 2, 3)) {
+        case 0b00:
+          gyro_scale = 131; break;
+        case 0b01:
+          gyro_scale = 65.5; break;
+        case 0b10:
+          gyro_scale = 32.8; break;
+        case 0b11:
+          gyro_scale = 16.4; break;
+        default:
+          return false;
+    }
+
+      switch(read_bits(0x1C, 2, 3)) {
+        case 0b00:
+          accel_scale = 16384; break;
+        case 0b01:
+          accel_scale = 8192; break;
+        case 0b10:
+          accel_scale = 4096; break;
+        case 0b11:
+          accel_scale = 2048; break;
+        default:
+          return false;
+    }
     return true;
+}
+
+bool MPU6050::begin(void) {
+    return begin(MPU6050_RANGE_2_G, MPU6050_RANGE_500_DEG);
 }
 
 void MPU6050::read_sensor(void) {
     uint8_t buffer[14];
 
-    if (!read_n((uint8_t)MPU6050_ACCEL_OUT, buffer, 14)) 
+    if (!read_n(MPU6050_ACCEL_OUT, buffer, 14)) 
         return false;
 
     rawAccX = buffer[0] << 8 | buffer[1];
@@ -138,10 +134,77 @@ void MPU6050::read_sensor(void) {
     return true;
 }
 
+void MPU6050::read_acce(void) {
+    uint8_t buffer[6];
+
+    if (!read_n(MPU6050_ACCEL_OUT, buffer, 6)) 
+        return false;
+
+    rawAccX = buffer[0] << 8 | buffer[1];
+    rawAccY = buffer[2] << 8 | buffer[3];
+    rawAccZ = buffer[4] << 8 | buffer[5];
+
+    return true;
+}
+
+void MPU6050::read_gyro(void) {
+    uint8_t buffer[6];
+
+    if (!read_n(MPU6050_GYRO_OUT, buffer, 6)) 
+        return false;
+
+    rawGyroX = buffer[0] << 8 | buffer[1];
+    rawGyroY = buffer[2] << 8 | buffer[3];
+    rawGyroY = buffer[4] << 8 | buffer[5];
+
+    gyroX = ((float)rawGyroX) / gyro_scale;
+    gyroY = ((float)rawGyroY) / gyro_scale;
+    gyroZ = ((float)rawGyroZ) / gyro_scale;
+
+    return true;
+}
+
+void MPU6050::read_temp(void) {
+    uint8_t buffer[2];
+
+    if (!read_n(MPU6050_TEMP_OUT, buffer, 2)) 
+        return false;
+    
+    rawTemp = buffer[0] << 8 | buffer[1];
+
+    temperature = (rawTemp / 340.0) + 36.53;
+
+    return true;
+}
+
 void MPU6050::Set_gyro_scale(float new_scale){
     gyro_scale = new_scale;
 }
 
 void MPU6050::Set_accel_scale(float new_scale){
     accel_scale = new_scale;
+}
+
+bool MPU6050::Set_param_register(uint8_t val, uint8_t reg) {
+    return write(val, 1, true, reg, 1);
+}
+
+bool MPU6050::Set_param_register_bits(uint8_t val, uint8_t reg, uint8_t bits, uint8_t shift){
+    return write_bits(val, reg, bits, shift);
+}
+
+float MPU6050::Get_gyro_scale(void) {
+    return gyro_scale;
+}
+
+float MPU6050::Get_accel_scale(void) {
+    return accel_scale;
+}
+
+uint8_t MPU6050::Get_param_register(uint8_t reg) {
+    return read8(reg);
+}
+
+uint8_t MPU6050::Get_param_register(uint8_t reg, uint8_t bits, uint8_t shift) {
+    return read_bits(reg, bits, shift);
 }

@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-#define VERSION_LIB_2 "1.1.5"
+#define VERSION_LIB "1.1.6"
 
 
 class I2C {
@@ -59,14 +59,15 @@ class I2C {
       return true;
     }
 
-    bool write_bits(uint8_t *data, uint8_t *reg, uint8_t bits, uint8_t shift) {
+    bool write_bits(uint8_t data, uint8_t *reg, uint8_t bits, uint8_t shift) {
       uint8_t val = read8(reg);
 
-      uint8_t mask = (1 << bits) - 1;
-      *data &= mask;
+      uint8_t mask = 0;
+      for (int i=0; i<bits; i++) mask |= (1 << i);
+      data &= mask;
       mask <<= shift;
       val &= ~mask;
-      val |= *data << shift;
+      val |= data << shift;
 
       write(val, 1, true, reg, 1);
     }
@@ -74,8 +75,11 @@ class I2C {
     uint8_t read_bits(uint8_t *reg, uint8_t bits, uint8_t shift) {
       uint8_t val = read8(reg);
 
+      uint8_t mask = 0;
+      for (int i=0; i<bits; i++) mask |= (1 << i);
+
       val >>= shift;
-      return val & ((1 << bits) - 1);
+      return val & mask;
     }
 
   
@@ -83,36 +87,55 @@ class I2C {
     TwoWire *_wire;
 };
 
-#define MPU6050_ADRESS 0x68
-#define MPU6050_REGISTRE 0x3B
-
 class MPU6050 : private I2C
 {
   public:
     MPU6050() : I2C() {
-      _addr = MPU6050_ADRESS;
+      _addr = 0x68;
     }
 
     bool begin() {
-      // write(MPU6050_FSYNC_OUT_DISABLED, 1, true, MPU6050_SMPLRT_DIV, 1);
-      // write_bits(MPU6050_BAND_260_HZ, MPU6050_ACCEL_CONFIG, 2, 3);
-      // write_bits(MPU6050_RANGE_500_DEG, MPU6050_GYRO_CONFIG, 2, 3);
-      // write_bits(MPU6050_RANGE_2_G, MPU6050_ACCEL_CONFIG, 2, 3);
+      write(0, 1, true, 0x19, 1);
+      write_bits(0b10, 0x1B, 2, 3);
+      write_bits(0b00, 0x1C, 2, 3);
 
-      gyro_scale = 131;
-      accel_scale = 16384;
+      switch(read_bits(0x1B, 2, 3)) {
+        case 0b00:
+          gyro_scale = 131; break;
+        case 0b01:
+          gyro_scale = 65.5; break;
+        case 0b10:
+          gyro_scale = 32.8; break;
+        case 0b11:
+          gyro_scale = 16.4; break;
+        default:
+          return false;
+      }
+
+      switch(read_bits(0x1C, 2, 3)) {
+        case 0b00:
+          accel_scale = 16384; break;
+        case 0b01:
+          accel_scale = 8192; break;
+        case 0b10:
+          accel_scale = 4096; break;
+        case 0b11:
+          accel_scale = 2048; break;
+        default:
+          return false;
+      }
       return true;
     }
 
     void read_sensor(void) {
       uint8_t buffer[14];
 
-      MPU6050::read_n(MPU6050_REGISTRE, buffer, 14);
+      MPU6050::read_n((uint8_t)0x3B, buffer, 14);
 
       rawAccX = buffer[0] << 8 | buffer[1];
       rawAccY = buffer[2] << 8 | buffer[3];
       rawAccZ = buffer[4] << 8 | buffer[5];
-      
+
       rawTemp = buffer[6] << 8 | buffer[7];
 
       rawGyroX = buffer[8] << 8 | buffer[9];
@@ -138,5 +161,4 @@ class MPU6050 : private I2C
     int16_t rawAccX, rawAccY, rawAccZ, rawTemp, rawGyroX, rawGyroY, rawGyroZ;
     float accel_scale, gyro_scale;
 };
-
 #endif

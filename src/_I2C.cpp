@@ -40,15 +40,15 @@ bool I2C::write(uint8_t *data, size_t len, bool stop,
     return false;    
 }
 
-uint8_t I2C::read8(uint8_t *reg) {
+uint8_t I2C::read8(uint8_t reg) {
     uint8_t buffer;
-    if (read_n(reg, buffer, 2)) 
+    if (read_n(reg, buffer, 1)) 
         return false;
     
     return buffer;
 }
 
-uint16_t I2C::read16(uint8_t *reg) {
+uint16_t I2C::read16(uint8_t reg) {
     uint8_t buffer[2];
     
     if (read_n(reg, buffer, 2)) 
@@ -60,7 +60,7 @@ uint16_t I2C::read16(uint8_t *reg) {
     return (buffer[0] << 8 | buffer[1]);
 }
 
-bool I2C::read_n(uint8_t *reg, uint8_t data[], int n) {
+bool I2C::read_n(uint8_t reg, uint8_t data[], int n) {
     if (_wire->requestFrom(_addr, (uint8_t) n, reg, 1, true) != n) 
         return false;
 
@@ -70,21 +70,25 @@ bool I2C::read_n(uint8_t *reg, uint8_t data[], int n) {
     return true;
 }
 
-bool I2C::write_bits(uint8_t *data, uint8_t *reg, uint8_t bits, uint8_t shift) {
+bool I2C::write_bits(uint8_t data, uint8_t reg, uint8_t bits, uint8_t shift) {
     uint8_t val = read8(reg);
 
-    uint8_t mask = (1 << bits) - 1;
-    *data &= mask;
+    uint8_t mask = 0;
+    for (int i=0; i<bits; i++) mask |= (1 << i);
+    data &= mask;
     mask <<= shift;
     val &= ~mask;
-    val |= *data << shift;
+    val |= data << shift;
 
-    write(val, 1, true, reg, 1);
+    return write(val, 1, true, reg, 1);
 }
 
-uint8_t I2C::read_bits(uint8_t *reg, uint8_t bits, uint8_t shift) {
+uint8_t I2C::read_bits(uint8_t reg, uint8_t bits, uint8_t shift) {
     uint8_t val = read8(reg);
 
+    uint8_t mask = 0;
+    for (int i=0; i<bits; i++) mask |= (1 << i);
+
     val >>= shift;
-    return val & ((1 << bits) - 1);
+    return val & mask;
 }

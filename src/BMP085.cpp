@@ -42,6 +42,8 @@
 #define BMP085_PRESSUREDATA 0xF6    //!< Pressure data register
 #define BMP085_READTEMPCMD 0x2E     //!< Read temperature control register value
 #define BMP085_READPRESSURECMD 0x34 //!< Read pressure control register value
+#define BMP_OK_REG 0xD0             //!< Read if the sensor is ready
+#define BMP_OK 0x55                 //!< Sensor ready
 
 
 BMP085::BMP085() : I2C() {
@@ -51,7 +53,7 @@ BMP085::BMP085() : I2C() {
 bool BMP085::begin() {
     oversampling = BMP085_ULTRAHIGHRES;
     
-    if (read8(0xD0) != 0x55)
+    if (read8(BMP_OK_REG) != BMP_OK)
         return false;
 
     /* read calibration data */
