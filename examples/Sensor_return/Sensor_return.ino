@@ -6,6 +6,7 @@ MPU6050 mpu;
 void setup() {
   Wire.begin();
   Serial.begin(9600);
+  Serial.print("Version Librairie : "); Serial.println(VERSION_LIB);
 
   if(!bmp.begin() || !mpu.begin()) {
     Serial.println("Initialisation impossible !");

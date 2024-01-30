@@ -14,7 +14,6 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-#include <SPI.h>
 
 
 #define VERSION_LIB "1.1.6"
@@ -92,21 +91,6 @@ class MPU6050 : private I2C
     int _sensorID_tem = 0x650, _sensorID_acc = 0x651, _sensorID_gyr = 0x652;
     int16_t rawAccX, rawAccY, rawAccZ, rawTemp, rawGyroX, rawGyroY, rawGyroZ;
     float accel_scale, gyro_scale;
-};
-
-class SPI {
-  protected:
-    SPI();
-    void SendSPI(uint8_t buff);
-    uint8_t RecSPI(void);
-
-    void begin(uint8_t cs_pin);
-
-
-
-  private:
-    uint8_t _CS_pin;
-
 };
 
 #endif 

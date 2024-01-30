@@ -31,6 +31,7 @@ void Transfert_Info(){
 
 void setup() {
     Serial.begin(9600);
+    Serial.print("Version Librairie : "); Serial.println(VERSION_LIB);
     Wire.begin();
 
     mpu.begin();
