@@ -16,7 +16,7 @@
 #include <Wire.h>
 
 
-#define VERSION_LIB "1.2.0"
+#define VERSION_LIB "1.1.7"
 
 
 class I2C {
