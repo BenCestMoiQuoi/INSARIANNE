@@ -1,4 +1,4 @@
-#include <INSARIANNE.h>
+#include <INSARIANNE_MPU6050.h>
 
 MPU6050 mpu;
 

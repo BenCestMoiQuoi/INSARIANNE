@@ -1,4 +1,5 @@
-#include <INSARIANNE.h>
+#include <INSARIANNE_BMP085.h>
+#include <INSARIANNE_MPU6050.h>
 #include <SPI.h>
 #include <SD.h>
 

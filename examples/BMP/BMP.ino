@@ -1,4 +1,5 @@
-#include <INSARIANNE.h>
+#include <INSARIANNE_BMP085.h>
+
 
 #define ALTITUDE_BASE 85
 

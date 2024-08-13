@@ -1,4 +1,5 @@
-#include <INSARIANNE.h>
+#include <INSARIANNE_BMP085.h>
+#include <INSARIANNE_MPU6050.h>
 
 BMP085 bmp;
 MPU6050 mpu;
